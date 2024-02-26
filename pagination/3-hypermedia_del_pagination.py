@@ -40,5 +40,23 @@ class Server:
         return self.__indexed_dataset
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
-        """ Returns dict """
-        pass
+        """Return a dictionary with hypermedia information
+        for the given index and page_size."""
+        assert index is None or (isinstance(index, int) and index >= 0)
+        assert isinstance(page_size, int) and page_size > 0
+
+        start_index = index if index is not None else 0
+        assert start_index < len(self.dataset())
+
+        end_index = start_index + page_size
+
+        dataset_page = self.dataset()[start_index:end_index]
+
+        ext_index = end_index
+
+        return {
+            "index": index,
+            "data": dataset_page,
+            "page_size": page_size,
+            "next_index": end_index
+        }
